@@ -1,5 +1,7 @@
 // 导入mongoose模块
 var mongoose = require('mongoose');
+mongoose.set('useCreateIndex', true)
+mongoose.set('useFindAndModify', false)
 // 连接服务器
 mongoose.connect('mongodb://localhost:27017/dataDb',{useNewUrlParser: true,useUnifiedTopology: true}, (err) =>{
     if(err){
