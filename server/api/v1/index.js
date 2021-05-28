@@ -7,6 +7,7 @@ const router = express.Router();
 const user = require('../../routes/user.js')
 
 router.post('/register',user.register); // 注册
+router.post('/login',user.login); // 注册
 
 // 将对进行导出
 module.exports = router;
