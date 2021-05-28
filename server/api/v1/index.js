@@ -7,7 +7,9 @@ const router = express.Router();
 const user = require('../../routes/user.js')
 
 router.post('/register',user.register); // 注册
-router.post('/login',user.login); // 注册
+router.post('/login',user.login); // 登录
+
+router.put('/users/:id',user.edit); // 编辑用户信息
 
 // 将对进行导出
 module.exports = router;

@@ -4,6 +4,10 @@ const User = require('../models/user.js');
 const joi = require('joi');
 // 导入bcrypt模块
 const bcrypt = require('bcrypt');
+// 导入用于生成JWT字符串的包
+const jwt = require("jsonwebtoken");
+// 引入config配置
+const config = require("../config/index.js");
 
 // 定义验证规则
 const schema = joi.object({
@@ -105,9 +109,15 @@ exports.login = async (req,res)=>{
               });
         }else{
             // 密码正确
+            // 在登录成功之后，调用 jwt.sign() 方法生成 JWT 字符串。并通过 token 属性发送给客户端 
+            // 默认情况 Token 必须以 Bearer+空格 开头
+    const token ="Bearer " + jwt.sign({ username: req.body.username, role: user.role}, config.secretKey, {
+      expiresIn: 600 * 24 * 3,
+    });
             res.send({
                 meta: { code: 1000, message: '登录成功' },
                 data: user,
+                token
             });
         }
 
@@ -117,4 +127,8 @@ exports.login = async (req,res)=>{
             data: null,
           });
     }
+}
+// 编辑用户信息
+exports.edit = async (req,res)=>{
+    console.log(req)
 }
