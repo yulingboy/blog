@@ -153,14 +153,19 @@ exports.edit = async (req, res) => {
     if (req.user.email == req.body.email || req.user.role == 2) {
       // 权限验证通过，可以修改用户信息
       req.body = JSON.parse(JSON.stringify(req.body));
-        console.log(req.body.role)
-      if(req.user.role != 2 && req.user.role != req.body.role ){
+      // 如果当前登录人不是超级管理员，那么不允许修改权限
+      if(req.user.role && req.user.role != 2 && req.user.role != req.body.role ){
         return res.send({
             meta: { code: 1001, message: '权限不足' },
             data: null,
           });
-        
       }
+       // 生成随机字符串
+       const salt = await bcrypt.genSalt(10);
+       // 加密
+       const password = await bcrypt.hash(req.body.password, salt);
+       // 替换
+       req.body.password = password;
       await User.findOneAndUpdate({ _id: req.params.id },{ $set: req.body },{ new: true })
         .then(() => {
           return res.send({
@@ -187,3 +192,98 @@ exports.edit = async (req, res) => {
     });
   }
 };
+// 根据id查询用户信息
+exports.user = async (req,res) => {
+    try{
+        const user = await User.findOne({_id: req.params.id});
+        if(user){
+            return res.send({
+                meta: { code: 1001, message: '获取成功' },
+                data: user,
+              });
+        }else{
+            return res.send({
+                meta: { code: 1001, message: '用户不存在' },
+                data: null,
+              });
+        }
+    }catch(err){
+        return res.send({
+            meta: { code: 1001, message: err.message },
+            data: null,
+          });
+    }
+}
+// 删除用户
+exports.delete = async (req,res) => {
+    try{
+        // 判断登录用户是否为超级管理员，只有超级管理员才可以删除用户
+        if(req.user.role != 2){
+            return res.send({
+                meta: { code: 1001, message: '权限不足' },
+                data: null,
+              });
+        }
+        const user = await User.findOne({_id: req.params.id});
+        if(!user){
+            return res.send({
+                meta: { code: 1001, message: '用户不存在' },
+                data: null,
+              });
+        }
+        await User.findOneAndDelete({_id: req.params.id}).then(()=>{
+            return res.send({
+                meta: { code: 1001, message: '删除成功' },
+                data: null,
+              });
+        }).catch(err=>{
+            return res.send({
+                meta: { code: 1001, message: '用户不存在' },
+                data: null,
+              });
+        })
+    }catch(err){
+        return res.send({
+            meta: { code: 1001, message: err.message },
+            data: null,
+          });
+    }
+}
+// 分页查询用户列表
+exports.users = async (req,res)=>{
+    try{
+        // 接收客户端传来的当前页参数
+        let pageNum = +req.query.pageNum || 1;
+        // 每一页显示的数据条数
+        let pageSize = +req.query.pageSize || 10;
+        // 查询用户数据的总数
+        let total = await User.countDocuments({});
+        //总页数
+        let pageCount = Math.ceil(total / pageSize);
+        //页码对应的数据查询开始位置
+        let start = (pageNum - 1) * pageSize;
+        // 从数据库中查询用户
+        await User.find({}).limit(pageSize).skip(start).then((data)=>{
+            return res.send({
+                meta: { code: 1000, message: '获取成功' },
+                data: data,
+                pagition:{
+                    pageNum: pageNum,  // 当前页
+                    total: total, // 数据总数
+                    pageSize: pageSize, // 每页条数
+                    pageCount: pageCount, // 页数
+                  }
+              });
+        }).catch(err=>{
+            return res.send({
+                meta: { code: 1001, message: err.message },
+                data: null,
+              });
+        })
+    }catch(err){
+        return res.send({
+            meta: { code: 1001, message: err.message },
+            data: null,
+          });
+    }
+}
