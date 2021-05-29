@@ -17,4 +17,4 @@ exports.isToken = (err, req, res, next) => {
       status: 500,
       message: '未知的错误',
     })
-  }
+}

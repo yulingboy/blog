@@ -13,9 +13,7 @@ const userSchema = new mongoose.Schema({
   // 状态 //0:启用状态 1:禁用状态
   state: { type: Number, default: 0 },
   //头像
-  user_img: {
-    type:String
-  }
+  user_img: { type:String }
 });
 
 const User = mongoose.model('User', userSchema);

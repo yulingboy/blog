@@ -6,6 +6,9 @@ const router = express.Router();
 // 将路由函数导入
 const user = require('../../routes/user.js')
 
+// 引入权限中间件
+const {isRole} = require('../../middleware/auth.js')
+
 router.post('/register',user.register); // 注册
 router.post('/login',user.login); // 登录
 
