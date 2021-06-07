@@ -50,14 +50,28 @@
 </template>
 <script>
 import bus from '@/components/bus';
+import * as sysTool from '@/utils/systemTool.js'
 export default {
     data() {
         return {
             collapse: false,
             fullscreen: false,
             name: 'linxin',
-            message: 2
+            message: 2,
+            userInfo:{
+                ip:null,
+                brower:null,
+                os:null
+            }
         };
+    },
+    created () {
+        //   this.userInfo.ip = sysTool.getYourIP()
+        this.userInfo.ip = sessionStorage.getItem('ip')
+          this.userInfo.area = sessionStorage.getItem('area')
+          this.userInfo.brower = sysTool.GetCurrentBrowser()
+          this.userInfo.os = sysTool.GetOs()
+          console.log('ip,浏览器，操作系统，：',  this.userInfo)
     },
     computed: {
         username() {

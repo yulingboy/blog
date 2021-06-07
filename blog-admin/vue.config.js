@@ -2,7 +2,8 @@ module.exports = {
     baseUrl: './',
     assetsDir: 'static',
     productionSourceMap: false,
-    // devServer: {
+    devServer: {
+        disableHostCheck: true
     //     proxy: {
     //         '/api':{
     //             target:'http://jsonplaceholder.typicode.com',
@@ -12,5 +13,5 @@ module.exports = {
     //             }
     //         }
     //     }
-    // }
+    }
 }
