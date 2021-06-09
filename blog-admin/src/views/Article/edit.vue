@@ -127,7 +127,7 @@
     <!-- <el-dialog title="上传图片" :visible.sync="upImgDialogVisible" width="50%">
       <up-img @getImg="getImg"></up-img>
     </el-dialog> -->
-    <el-dialog title="裁剪图片" :visible.sync="dialogVisible" width="30%">
+    <el-dialog title="裁剪图片" :visible.sync="upImgDialogVisible" width="30%">
                 <vue-cropper
                     ref="cropper"
                     :src="cover"
@@ -148,11 +148,13 @@
 // import classifyApi from '@/api/classify';
 // import ArticleApi from '@/api/article';
 // import UpImg from '@/components/UpImg.vue';
+import VueCropper from 'vue-cropperjs';
 import Markdown from '@/components/Markdown'
 export default {
   components: {
     // UpImg
-    Markdown
+    Markdown,
+    VueCropper
   },
   data() {
     return {
@@ -203,7 +205,7 @@ export default {
         console.log(this.$route);
         var id = this.$route.params.id;
         console.log(id);
-        await this.$api.articles(id)
+        await this.$api.article(id)
           .then(res => {
             console.log(res);
             this.title = res.data.title;
@@ -264,6 +266,26 @@ export default {
       this.inputVisible = false;
       this.inputValue = '';
     },
+    // 图片编辑
+        cropImage() {
+            this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
+        },
+        // 取消编辑，图片恢复成原来的图片
+        cancelCrop() {
+            this.dialogVisible = false;
+            this.cropImg = this.form.avatar_url;
+        },
+        // 上传图片
+        uploadImage() {
+            console.log(this.file);
+            let data = new FormData();
+            data.append('file', this.file);
+            this.$api.upload(data).then(res => {
+                console.log(res.data.avatar_url);
+                this.form.avatar_url = res.data.avatar_url;
+                this.dialogVisible = false;
+            });
+        },
     updateData(e) {
       this.content = e;
     },

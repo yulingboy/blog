@@ -6,28 +6,29 @@
             </el-breadcrumb>
         </div>
         <el-card class="box-card">
-            <div class="box-title">
-                <div class="item-title"><span>权限</span></div>
+            <!-- <div class="box-title">
+                <div class="item-title"><span>状态</span></div>
                 <div class="item-list">
                     <span @click="changeRole(3)" :class="{ active: role == 3 }">全部</span>
-                    <span @click="changeRole(2)" :class="{ active: role == 2 }">超级管理员</span>
-                    <span @click="changeRole(1)" :class="{ active: role == 1 }">管理员</span>
-                    <span @click="changeRole(0)" :class="{ active: role == 0 }">游客</span>
+                    <span @click="changeRole(2)" :class="{ active: role == 2 }">垃圾箱</span>
+                    <span @click="changeRole(1)" :class="{ active: role == 1 }">草稿</span>
+                    <span @click="changeRole(0)" :class="{ active: role == 0 }">发布</span>
                 </div>
-            </div>
+            </div> -->
             <div class="box-title">
                 <div class="item-title"><span>状态</span></div>
                 <div class="item-list">
                     <span @click="changeState(2)" :class="{ active: state == 2 }">全部</span>
-                    <span @click="changeState(1)" :class="{ active: state == 1 }">启用</span>
-                    <span @click="changeState(0)" :class="{ active: state == 0 }">禁用</span></div>
+                    <span @click="changeState(1)" :class="{ active: state == 1 }">草稿</span>
+                    <span @click="changeState(0)" :class="{ active: state == 0 }">发布</span>
+                </div>
             </div>
         </el-card>
         <div class="container">
             <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header" height="500px">
                 <el-table-column prop="_id" label="ID" align="center"></el-table-column>
-                <el-table-column prop="title" label="标题"></el-table-column>
-                <el-table-column prop="classify" label="分类"></el-table-column>
+                <el-table-column prop="title" label="标题" align="center"></el-table-column>
+                <el-table-column prop="classify" label="分类" align="center"></el-table-column>
                 <el-table-column label="封面(查看大图)" align="center">
                     <template slot-scope="scope">
                         <el-image class="table-td-thumb" :src="scope.row.cover" :preview-src-list="[scope.row.cover]"></el-image>
@@ -45,9 +46,9 @@
                         <el-tag :type="scope.row.isPublish  ? 'success' : 'error'">{{ scope.row.isPublish ? '发布' : '草稿' }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="publishDate" label="更新时间"></el-table-column>
-                <el-table-column prop="view" label="阅读数"></el-table-column>
-                <el-table-column prop="comments" label="评论数"></el-table-column>
+                <el-table-column prop="publishDate" label="更新时间" align="center"></el-table-column>
+                <el-table-column prop="view" label="阅读数" align="center"></el-table-column>
+                <el-table-column prop="comments" label="评论数" align="center"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -119,16 +120,11 @@ export default {
     methods: {
         // 获取用户列表
         getData() {
-            let params = null
-            // if(this.role != 3 && this.state != 2){
-            // params = {
-            //     role:this.role,
-            //     state:this.state,
-            //     ...this.pagition
-            //     }
-            // }else{
-            //     params = this.pagition
-            // }
+            let  params = {
+                // role:this.role, 
+                state:this.state,
+                ...this.pagition
+                }
             this.$api.articles(params).then(res => {
                 console.log(res);
                 this.pagition = res.pagition;

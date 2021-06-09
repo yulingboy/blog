@@ -1,6 +1,6 @@
 <template>
     <div>
-        <mavon-editor v-model="content" ref="md" @imgAdd="$imgAdd" @change="change" :defaultOpen="preview" :subfield="false" style="min-height: 600px"/>
+        <mavon-editor v-model="content" ref="md" @imgAdd="$imgAdd" @change="change" :subfield="false" style="min-height: 600px"/>
     </div>
 </template>
 

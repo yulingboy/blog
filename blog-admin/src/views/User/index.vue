@@ -19,8 +19,8 @@
                 <div class="item-title"><span>状态</span></div>
                 <div class="item-list">
                     <span @click="changeState(2)" :class="{ active: state == 2 }">全部</span>
-                    <span @click="changeState(1)" :class="{ active: state == 1 }">启用</span>
-                    <span @click="changeState(0)" :class="{ active: state == 0 }">禁用</span></div>
+                    <span @click="changeState(1)" :class="{ active: state == 1 }">禁用</span>
+                    <span @click="changeState(0)" :class="{ active: state == 0 }">启用</span></div>
             </div>
         </el-card>
         <div class="container">
@@ -35,14 +35,14 @@
                 </el-table-column>
                 <el-table-column label="权限" align="center">
                     <template slot-scope="scope">
-                        <el-tag :type="scope.row.role === 0 ? '' : scope.row.role === 1 ? 'info' : 'success'">{{
-                            scope.row.role == 0 ? '游客' : scope.row.role === 1 ? '管理员' : '超级管理员'
+                        <el-tag :type="scope.row.role == 0 ? '' : scope.row.role == 1 ? 'info' : 'success'">{{
+                            scope.row.role == 0 ? '游客' : scope.row.role == 1 ? '管理员' : '超级管理员'
                         }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
-                        <el-tag :type="scope.row.state === 0 ? 'success' : 'error'">{{ scope.row.role === 0 ? '启用' : '禁用' }}</el-tag>
+                        <el-tag :type="scope.row.state == 0 ? 'success' : 'error'">{{ scope.row.role == 0 ? '启用' : '禁用' }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column prop="date" label="注册时间"></el-table-column>
@@ -117,16 +117,11 @@ export default {
     methods: {
         // 获取用户列表
         getData() {
-            let params = null
-            if(this.role != 3 && this.state != 2){
-            params = {
+            let  params = {
                 role:this.role,
                 state:this.state,
                 ...this.pagition
                 }
-            }else{
-                params = this.pagition
-            }
             this.$api.users(params).then(res => {
                 console.log(res);
                 this.pagition = res.pagition;
