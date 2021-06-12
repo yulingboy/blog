@@ -11,6 +11,8 @@ import './components/common/directives';
 import 'babel-polyfill';
 import * as api from './api/index.js' // 导入api接口
 
+import store from './store'
+
 import moment from 'moment'//导入文件
 Vue.prototype.moment = moment;//赋值使用
 
@@ -50,6 +52,7 @@ router.afterEach( (to,from,next) => {
 
 new Vue({
     router,
+    store,
     i18n,
     render: h => h(App)
 }).$mount('#app');

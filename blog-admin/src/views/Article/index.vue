@@ -5,8 +5,26 @@
                 <el-breadcrumb-item><i class="el-icon-lx-cascades"></i> 文章管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <el-card class="box-card">
-            <!-- <div class="box-title">
+        <el-collapse accordion>
+            <el-collapse-item>
+                <template slot="title">
+                    <div class="collapse-header">
+                        <el-form :inline="true" class="demo-form-inline">
+                            <el-form-item label="标题">
+                                <el-input placeholder="请输入标题"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary">查询</el-button>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="newArticle">新增</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                </template>
+                <div>
+                    <el-card class="box-card">
+                        <!-- <div class="box-title">
                 <div class="item-title"><span>状态</span></div>
                 <div class="item-list">
                     <span @click="changeRole(3)" :class="{ active: role == 3 }">全部</span>
@@ -15,15 +33,19 @@
                     <span @click="changeRole(0)" :class="{ active: role == 0 }">发布</span>
                 </div>
             </div> -->
-            <div class="box-title">
-                <div class="item-title"><span>状态</span></div>
-                <div class="item-list">
-                    <span @click="changeState(2)" :class="{ active: state == 2 }">全部</span>
-                    <span @click="changeState(1)" :class="{ active: state == 1 }">草稿</span>
-                    <span @click="changeState(0)" :class="{ active: state == 0 }">发布</span>
+                        <div class="box-title">
+                            <div class="item-title"><span>状态</span></div>
+                            <div class="item-list">
+                                <span @click="changeState(2)" :class="{ active: state == 2 }">全部</span>
+                                <span @click="changeState(1)" :class="{ active: state == 1 }">草稿</span>
+                                <span @click="changeState(0)" :class="{ active: state == 0 }">发布</span>
+                            </div>
+                        </div>
+                    </el-card>
                 </div>
-            </div>
-        </el-card>
+            </el-collapse-item>
+        </el-collapse>
+
         <div class="container">
             <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header" height="500px">
                 <el-table-column prop="_id" label="ID" align="center"></el-table-column>
@@ -36,14 +58,12 @@
                 </el-table-column>
                 <el-table-column label="是否置顶" align="center">
                     <template slot-scope="scope">
-                        <el-tag :type="scope.row.isHot ? 'success' : 'info'">{{
-                            scope.row.isHot  ? '置顶' :  '普通'
-                        }}</el-tag>
+                        <el-tag :type="scope.row.isHot ? 'success' : 'info'">{{ scope.row.isHot ? '置顶' : '普通' }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="是否发布" align="center">
                     <template slot-scope="scope">
-                        <el-tag :type="scope.row.isPublish  ? 'success' : 'error'">{{ scope.row.isPublish ? '发布' : '草稿' }}</el-tag>
+                        <el-tag :type="scope.row.isPublish ? 'success' : 'error'">{{ scope.row.isPublish ? '发布' : '草稿' }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column prop="publishDate" label="更新时间" align="center"></el-table-column>
@@ -111,7 +131,7 @@ export default {
             id: -1,
             pageData: {},
             role: 3,
-            state:2
+            state: 2
         };
     },
     created() {
@@ -120,11 +140,11 @@ export default {
     methods: {
         // 获取用户列表
         getData() {
-            let  params = {
-                // role:this.role, 
-                state:this.state,
+            let params = {
+                // role:this.role,
+                state: this.state,
                 ...this.pagition
-                }
+            };
             this.$api.articles(params).then(res => {
                 console.log(res);
                 this.pagition = res.pagition;
@@ -160,6 +180,12 @@ export default {
             this.$message.error(`删除了${str}`);
             this.multipleSelection = [];
         },
+        // 新增文章
+        newArticle(){
+            this.$router.push({
+                name: 'articleEdit',
+            })
+        },
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
@@ -172,11 +198,11 @@ export default {
         },
         changeRole(index) {
             this.role = index;
-            this.getData()
+            this.getData();
         },
         changeState(index) {
             this.state = index;
-            this.getData()
+            this.getData();
         },
         // 保存编辑
         saveEdit() {
@@ -246,5 +272,23 @@ export default {
 .active {
     background-color: #000;
     color: #fff;
+}
+.collapse-header {
+    /* background-color: pink; */
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin-left: 40px;
+    line-height: 1em;
+}
+.collapse-header .el-form {
+    height: 50px;
+    /* display: flex;
+    justify-content: flex-start;
+    align-items: center; */
+    margin-top: 9px;
+}
+.el-collapse-item__header {
+    display: none;
 }
 </style>

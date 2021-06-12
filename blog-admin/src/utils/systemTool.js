@@ -46,7 +46,8 @@ export function GetCurrentBrowser () {
   // get os
   export function GetOs () {
     let sUserAgent = navigator.userAgent.toLocaleLowerCase()
-    let isWin = (navigator.platform === 'win32') || (navigator.platform === 'windows')
+    console.log(navigator)
+    let isWin = (navigator.platform === 'win32') || (navigator.platform === 'windows') || (navigator.platform === 'Win32')
     let isMac = (navigator.platform === 'mac68k') || (navigator.platform === 'macppc') || (navigator.platform === 'macintosh') || (navigator.platform === 'macintel')
     if (isMac) return 'Mac'
     var isUnix = (navigator.platform === 'x11') && !isWin && !isMac
@@ -64,9 +65,10 @@ export function GetCurrentBrowser () {
       if (isWinVista) return 'WinVista'
       var isWin7 = sUserAgent.indexOf('windows nt 6.1') > -1 || sUserAgent.indexOf('windows 7') > -1
       if (isWin7) return 'Win7'
-      var isWin10 = sUserAgent.indexOf('windows nt 6.1') > -1 || sUserAgent.indexOf('windows 10') > -1
+      var isWin10 = sUserAgent.indexOf('windows nt 10.0') > -1 || sUserAgent.indexOf('windows 10') > -1
       if (isWin10) return 'Win10'
     }
+    console.log(isWin)
     if (sUserAgent.indexOf('android') > -1) return 'Android'
     if (sUserAgent.indexOf('iphone') > -1) return 'iPhone'
     if (sUserAgent.indexOf('symbianos') > -1) return 'SymbianOS'
