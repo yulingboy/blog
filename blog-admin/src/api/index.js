@@ -95,3 +95,8 @@ export const task = id => {
 export const allTasks = params => {
   return axios.get('/allTasks');
 };
+
+// 查询操作日志列表
+export const adminLogs = params => {
+  return axios.get('/adminLogs', { params: params });
+};

@@ -71,7 +71,8 @@ export default {
           this.userInfo.area = sessionStorage.getItem('area')
           this.userInfo.brower = sysTool.GetCurrentBrowser()
           this.userInfo.os = sysTool.GetOs()
-          console.log('ip,浏览器，操作系统，：',  this.userInfo)
+          localStorage.setItem('userInfo',encodeURIComponent(JSON.stringify(this.userInfo)))
+        //   console.log('ip,浏览器，操作系统，：',  this.userInfo) 
     },
     computed: {
         username() {

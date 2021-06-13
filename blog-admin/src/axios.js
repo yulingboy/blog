@@ -10,7 +10,8 @@ instance.interceptors.request.use(
   config => {
     // console.log(sessionStorage.getItem('token'))
     config.headers.Authorization = localStorage.getItem('token');
-
+    config.headers.user = localStorage.getItem('user');
+    config.headers.userInfo = localStorage.getItem('userInfo');
     return config;
   },
   err => Promise.reject(err)
