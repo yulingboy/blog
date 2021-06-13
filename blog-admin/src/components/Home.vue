@@ -49,3 +49,11 @@ export default {
     }
 };
 </script>
+<style scoped>
+.content-box {
+    left: 160px;
+}
+.content-collapse {
+    left: 60px;
+}
+</style>

@@ -61,7 +61,7 @@
                     <el-button @click="cancelCrop">取 消</el-button>
                     <el-button type="primary" @click="uploadImage">确 定</el-button>
                 </span>
-            </el-dialog>
+            </el-dialog> 
         </div>
     </div>
 </template>

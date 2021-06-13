@@ -15,7 +15,7 @@
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">新增</el-button>
             </el-form-item>
-        </el-form>
+        </el-form> 
         <div class="container">
             <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header" height="380px">
                 <el-table-column prop="_id" label="ID" align="center"></el-table-column>

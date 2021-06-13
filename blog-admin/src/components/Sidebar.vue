@@ -95,7 +95,7 @@ export default {
         }
     },
     created() {
-        // 通过 Event Bus 进行组件间通信，来折叠侧边栏
+        // 通过 Event Bus 进行组件间通信，来折叠侧边栏 
         bus.$on('collapse', msg => {
             this.collapse = msg;
             bus.$emit('collapse-content', msg);
@@ -117,8 +117,11 @@ export default {
     width: 0;
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
-    width: 200px;
+    width: 160px;
 }
+/* .el-menu {
+    width: 180px;
+} */
 .sidebar > ul {
     height: 100%;
 }

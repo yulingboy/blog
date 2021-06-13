@@ -50,7 +50,7 @@ export const allCategories = params => {
   return axios.get('/categories');
 };
 
-// 新增文章
+// 新增文章 
 export const articleAdd = params => {
   return axios.post('/articles', params);
 };
@@ -69,4 +69,29 @@ export const article = id => {
 // 查询文章列表
 export const articles = params => {
   return axios.get('/articles', { params: params });
+};
+
+// 新增任务
+export const taskAdd = params => {
+  return axios.post('/tasks', params);
+};
+// 删除任务
+export const taskDelete = id => {
+  return axios.delete('/tasks/' + id);
+};
+// 修改任务
+export const taskEdit = (id, params) => {
+  return axios.put('/tasks/' + id, params);
+};
+// 根据ID查询任务
+export const task = id => {
+  return axios.get('/tasks/' + id);
+};
+// 查询分类列表
+// export const categories = params => {
+//   return axios.get('/categories', { params: params });
+// };
+// 不分页查询任务
+export const allTasks = params => {
+  return axios.get('/allTasks');
 };

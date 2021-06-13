@@ -6,8 +6,8 @@
                     <div class="user-info">
                         <img src="@/assets/img/img.jpg" class="user-avator" alt />
                         <div class="user-info-cont">
-                            <div class="user-info-name">{{name}}</div>
-                            <div>{{role}}</div>
+                            <div class="user-info-name">{{ name }}</div>
+                            <div>{{ role }}</div>
                         </div>
                     </div>
                     <div class="user-info-list">
@@ -22,17 +22,16 @@
                 <el-card shadow="hover" style="height:252px;">
                     <div slot="header" class="clearfix">
                         <span>语言详情</span>
-                    </div>Vue
-                    <el-progress :percentage="71.3" color="#42b983"></el-progress>JavaScript
-                    <el-progress :percentage="24.1" color="#f1e05a"></el-progress>CSS
-                    <el-progress :percentage="13.7"></el-progress>HTML
+                    </div>
+                    Vue <el-progress :percentage="71.3" color="#42b983"></el-progress>JavaScript
+                    <el-progress :percentage="24.1" color="#f1e05a"></el-progress>CSS <el-progress :percentage="13.7"></el-progress>HTML
                     <el-progress :percentage="5.9" color="#f56c6c"></el-progress>
                 </el-card>
             </el-col>
             <el-col :span="16">
                 <el-row :gutter="20" class="mgb20">
                     <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
+                        <el-card shadow="hover" :body-style="{ padding: '0px' }">
                             <div class="grid-content grid-con-1">
                                 <i class="el-icon-lx-people grid-con-icon"></i>
                                 <div class="grid-cont-right">
@@ -43,7 +42,7 @@
                         </el-card>
                     </el-col>
                     <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
+                        <el-card shadow="hover" :body-style="{ padding: '0px' }">
                             <div class="grid-content grid-con-2">
                                 <i class="el-icon-lx-notice grid-con-icon"></i>
                                 <div class="grid-cont-right">
@@ -54,7 +53,7 @@
                         </el-card>
                     </el-col>
                     <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{padding: '0px'}">
+                        <el-card shadow="hover" :body-style="{ padding: '0px' }">
                             <div class="grid-content grid-con-3">
                                 <i class="el-icon-lx-goods grid-con-icon"></i>
                                 <div class="grid-cont-right">
@@ -68,26 +67,23 @@
                 <el-card shadow="hover" style="height:403px;">
                     <div slot="header" class="clearfix">
                         <span>待办事项</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">添加</el-button>
+                        <el-button style="float: right; padding: 3px 0" type="text" @click="onSubmit">添加</el-button>
                     </div>
                     <el-table :show-header="false" :data="todoList" style="width:100%;">
                         <el-table-column width="40">
                             <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.status"></el-checkbox>
+                                <el-checkbox v-model="scope.row.checked"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <div
-                                    class="todo-item"
-                                    :class="{'todo-item-del': scope.row.status}"
-                                >{{scope.row.title}}</div>
+                                <div class="todo-item" :class="{ 'todo-item-del': scope.row.status == 2 }">{{ scope.row.task }}</div>
                             </template>
                         </el-table-column>
-                        <el-table-column width="60">
-                            <template>
-                                <i class="el-icon-edit"></i>
-                                <i class="el-icon-delete"></i>
+                        <el-table-column width="120">
+                            <template slot-scope="scope">
+                                <el-button type="text" icon="el-icon-edit" @click="taskEdit(scope.row)">编辑</el-button>
+                                <el-button type="text" icon="el-icon-delete" @click="taskDelete(scope.row)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -106,6 +102,35 @@
                 </el-card>
             </el-col>
         </el-row>
+        <!-- 编辑弹出框 -->
+        <el-dialog title="编辑任务" :visible.sync="editVisible" width="30%">
+            <el-form ref="form" :model="form" label-width="70px">
+                <el-form-item label="任务名">
+                    <el-input v-model="form.task"></el-input>
+                </el-form-item>
+                <el-form-item label="状态">
+                    <el-select style="width:100%" v-model="form.status" placeholder="请选择">
+                        <el-option v-for="item in taskOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveEdit">确 定</el-button>
+            </span>
+        </el-dialog>
+        <!-- 新增弹出框 -->
+        <el-dialog title="新增任务" :visible.sync="addtVisible" width="30%">
+            <el-form ref="form" :model="form" label-width="70px">
+                <el-form-item label="任务名">
+                    <el-input v-model="form.task"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="addtVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveAdd">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -215,7 +240,17 @@ export default {
                         data: [74, 118, 200, 235, 90]
                     }
                 ]
-            }
+            },
+            editVisible: false,
+            addtVisible: false,
+            form: {
+                task: null
+            },
+            taskOptions: [
+                { label: '未开始', value: 0 },
+                { label: '进行中', value: 1 },
+                { label: '已完成', value: 2 }
+            ]
         };
     },
     components: {
@@ -237,7 +272,78 @@ export default {
     //     window.removeEventListener('resize', this.renderChart);
     //     bus.$off('collapse', this.handleBus);
     // },
+    created() {
+        this.init();
+    },
     methods: {
+        init() {
+            this.getTasks();
+        },
+        getTasks() {
+            this.$api.allTasks().then(res => {
+                console.log(res);
+                this.todoList = res.data.map(item => {
+                    let checked = false;
+                    if (item.status == 1) {
+                        checked = true;
+                    } else {
+                        checked = false;
+                    }
+                    return {
+                        checked: checked,
+                        ...item
+                    };
+                });
+            });
+        },
+        // 新增按钮弹窗显示
+        onSubmit() {
+            this.addtVisible = true;
+        },
+        // 确认新增
+        saveAdd() {
+            this.$api.taskAdd(this.form).then(res => {
+                console.log(res);
+                this.$message.success('新增任务成功');
+                this.addtVisible = false;
+                this.getData();
+            });
+        },
+        taskEdit(row) {
+            this.editVisible = true;
+            this.form = row;
+        },
+        // 保存编辑
+        saveEdit() {
+            this.editVisible = false;
+            this.$api.taskEdit(this.form._id, this.form).then(res => {
+                // console.log(res)
+                this.$message.success('修改成功');
+            });
+        },
+        // 删除任务
+        taskDelete(row) {
+            this.$confirm(`你确定要删除任务：${row.task} 吗?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+                .then(() => {
+                    this.$api.taskDelete(row._id).then(res => {
+                        this.getData();
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    });
+                })
+                .catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+        },
         changeDate() {
             const now = new Date().getTime();
             this.data.forEach((item, index) => {
@@ -262,7 +368,6 @@ export default {
     }
 };
 </script>
-
 
 <style scoped>
 .el-row {
