@@ -4,7 +4,7 @@ import { Message } from 'element-ui';
 import router from '@/router'
 const instance = axios.create({
   // baseURL: 'http://127.0.0.1:3000/api/admin/v2/' 
-  baseURL: 'http://127.0.0.1:3000/api/v1/blog'
+  baseURL: 'http://127.0.0.1:3000/api/v1/admin'
 });
 instance.interceptors.request.use(
   config => {
